@@ -31,8 +31,10 @@ fun main() {
 }
 
 /***
-    Yüksek Seviyeli Fonksiyon: Başka bir fonksiyonu argüman olarak alabilen veya bir fonksiyonu döndüren fonksiyondur.
-    Lambda İfadesi: Adlandırılmamış fonksiyonlardır; genellikle bir fonksiyona geçici bir fonksiyon sağlamak için kullanılır.
+    Yüksek Seviyeli Fonksiyon: Başka bir fonksiyonu argüman olarak alabilen
+    veya bir fonksiyonu döndüren fonksiyondur.
+    Lambda İfadesi: Adlandırılmamış fonksiyonlardır;
+    genellikle bir fonksiyona geçici bir fonksiyon sağlamak için kullanılır.
  ***/
 
 fun operateOnNumbers(a: Int, b: Int, operation: (Int, Int) -> Int): Int {

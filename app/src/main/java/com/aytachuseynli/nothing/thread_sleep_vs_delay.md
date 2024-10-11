@@ -53,11 +53,11 @@ In this example, `delay(2000)` pauses the coroutine for 2 seconds, but the under
 
 ## Comparison
 
-| Feature              | `Thread.sleep()`                             | `delay()`                                  |
-|----------------------|----------------------------------------------|--------------------------------------------|
+| Feature               | `Thread.sleep()`                             | `delay()`                                  |
+|-----------------------|----------------------------------------------|--------------------------------------------|
 | **Blocking**          | Blocks the thread entirely                   | Non-blocking; frees up the thread          |
 | **Usage**             | Used in regular thread-based execution       | Used in asynchronous tasks, coroutines     |
-| **Performance**       | Can reduce performance by blocking the thread | Optimizes performance by non-blocking      |
+| **Performance**       | Can reduce performance by blocking the thread| Optimizes performance by non-blocking      |
 | **Context**           | Works with Java threads                      | Works within Kotlin Coroutines             |
 
 ### When to Use Which?
