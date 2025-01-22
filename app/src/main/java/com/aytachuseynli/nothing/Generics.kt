@@ -5,7 +5,7 @@ package com.aytachuseynli.nothing
 // GENERIC CLASS EXAMPLE
 // A simple Box class that works with any type T
 class Box<T>(var item: T) {
-    fun getItem(): T {
+    fun fetchItem(): T { // Renamed method to `fetchItem`
         return item
     }
 }
@@ -14,8 +14,8 @@ fun testGenericBox() {
     val intBox = Box(5)  // T will be Int
     val stringBox = Box("Hello")  // T will be String
 
-    println(intBox.getItem())  // Output: 5
-    println(stringBox.getItem())  // Output: Hello
+    println(intBox.fetchItem())  // Output: 5
+    println(stringBox.fetchItem())  // Output: Hello
 }
 
 
