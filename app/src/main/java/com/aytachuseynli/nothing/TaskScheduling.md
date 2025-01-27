@@ -1,9 +1,9 @@
 package com.aytachuseynli.nothing
 
 
-**WorkManager:** For deferrable and guaranteed background work (e.g., syncing data).
-**JobScheduler:** For scheduling background jobs that need network or charging conditions.
-**AlarmManager:** For triggering tasks at specific times, even if the app is not running.
+- **WorkManager:** For deferrable and guaranteed background work (e.g., syncing data).
+- **JobScheduler:** For scheduling background jobs that need network or charging conditions.
+- **AlarmManager:** For triggering tasks at specific times, even if the app is not running.
 
 # Task Scheduling APIs in Android
 
