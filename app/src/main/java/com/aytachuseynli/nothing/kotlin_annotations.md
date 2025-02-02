@@ -1,96 +1,95 @@
 
-# Kotlin'de `@JvmStatic`, `@JvmField` ve `@JvmOverloads` Anotasyonları
+# `@JvmStatic`, `@JvmField`, and `@JvmOverloads` Annotations in Kotlin
 
-Kotlin'de `@JvmStatic`, `@JvmField` ve `@JvmOverloads` anotasyonları, Kotlin ve Java arasındaki uyumluluğu artırmak için kullanılır. Her biri farklı bir amaca hizmet eder ve Java ile daha kolay etkileşim kurmanızı sağlar. İşte bu anotasyonların detaylı açıklamaları:
+In Kotlin, the `@JvmStatic`, `@JvmField`, and `@JvmOverloads` annotations are used to enhance interoperability between Kotlin and Java. Each serves a different purpose and makes interaction with Java easier. Below are detailed explanations of these annotations:
 
-## 1. `@JvmStatic` Anotasyonu
-`@JvmStatic` anotasyonu, Kotlin'de **companion object** içindeki bir fonksiyonun ya da özelliğin Java'da **static** bir üye gibi kullanılmasını sağlar.
+## 1. `@JvmStatic` Annotation
+The `@JvmStatic` annotation allows a function or property inside a **companion object** in Kotlin to be treated as a **static** member in Java.
 
-### Örnek:
-Kotlin'de:
+### Example:
+In Kotlin:
 ```kotlin
 class MyClass {
     companion object {
         @JvmStatic
-        fun staticFonksiyon() {
-            println("Static Fonksiyon")
+        fun staticFunction() {
+            println("Static Function")
         }
     }
 }
 ```
 
-Java'da bu fonksiyon şöyle çağrılabilir:
+In Java, this function can be called like this:
 ```java
 MyClass.staticFonksiyon();
 ```
 
-Eğer `@JvmStatic` kullanılmazsa, Java'da bu fonksiyon şu şekilde çağrılır:
+If @JvmStatic is not used, the function must be called like this in Java:
 ```java
 MyClass.Companion.staticFonksiyon();
 ```
 
-- **Kullanım amacı**: Java'da daha kolay erişim için static fonksiyonlar oluşturmak.
-
+- **Purpose**: To create static functions for easier access in Java.
 ---
 
-## 2. `@JvmField` Anotasyonu
-`@JvmField` anotasyonu, Kotlin'de bir özelliğin doğrudan bir **alan** (field) olarak ortaya çıkmasını sağlar. Bu sayede **getter** veya **setter** oluşturulmaz ve doğrudan erişim sağlanır.
+## 2. `@JvmField` Annotation
+The `@JvmField` annotation ensures that a property in Kotlin is exposed as a field directly, without generating `getter` or `setter` methods.
 
-### Örnek:
-Kotlin'de:
+### Example:
+In Kotlin:
 ```kotlin
 class MyClass {
     @JvmField
-    var myField: String = "Kotlin Alanı"
+    var myField: String = "Kotlin Field"
 }
 ```
 
-Java'da doğrudan şu şekilde erişilebilir:
+In Java, direct access is possible:
 ```java
 MyClass myClass = new MyClass();
-System.out.println(myClass.myField); // Doğrudan erişim
+System.out.println(myClass.myField); // Direct access
 ```
 
-Eğer `@JvmField` kullanılmazsa, şu şekilde erişmeniz gerekir:
+If `@JvmField` is not used, you would need to access it like this:
 ```java
 myClass.getMyField();
 ```
 
-- **Kullanım amacı**: Özelliğe doğrudan erişim sağlamak ve getter/setter oluşturulmaması.
+- **Purpose**: To allow direct access to a property without generating getter/setter methods.
 
 ---
 
-## 3. `@JvmOverloads` Anotasyonu
-`@JvmOverloads` anotasyonu, Kotlin'deki **varsayılan parametre** (default parameter) değerlerini desteklemeyen Java için **aşırı yüklenmiş** (overloaded) fonksiyonlar üretir. Böylece, Java'da Kotlin'de olduğu gibi varsayılan parametrelerle çalışmak kolaylaşır.
+## 3. `@JvmOverloads` Annotation
+The `@JvmOverloads` annotation generates `overloaded` functions for Java to compensate for Java’s lack of support for `default parameters` in Kotlin. This makes it easier to work with Kotlin functions that have default parameter values in Java.
 
-### Örnek:
-Kotlin'de:
+### Example:
+In Kotlin:
 ```kotlin
 class MyClass {
     @JvmOverloads
-    fun selamVer(isim: String = "Dünya", yas: Int = 30) {
-        println("Merhaba, $isim! Yaşın $yas.")
+    fun selamVer(isim: String = "World", yas: Int = 30) {
+        println("Hello, $name! Your ae is $age.")
     }
 }
 ```
 
-Java'da bu fonksiyon şu şekillerde çağrılabilir:
+In Java, this function can be called in multiple ways:
 ```java
-myClass.selamVer(); // "Dünya" ve 30 kullanır
-myClass.selamVer("Ali"); // "Ali" ve 30 kullanır
-myClass.selamVer("Ali", 25); // "Ali" ve 25 kullanır
+myClass.greet(); // Uses "World" and 30
+myClass.greet("Ali"); // Uses "Ali" and 30
+myClass.greet("Ali", 25); // Uses "Ali" and 25
 ```
 
-Eğer `@JvmOverloads` kullanılmazsa, tüm parametreleri Java'da açıkça belirtmeniz gerekir:
+If @JvmOverloads is not used, you must specify all parameters explicitly in Java:
 ```java
-myClass.selamVer("Ali", 25);
+myClass.greet("Ali", 25);
 ```
 
-- **Kullanım amacı**: Varsayılan parametrelerle çalışan fonksiyonlar için Java'ya uygun aşırı yüklenmiş versiyonlar oluşturmak.
+- **Purpose**:To create overloaded function versions for Java compatibility when using default parameters in Kotlin.
 
 ---
 
-## Video ve Blog Önerileri:
-- **Video**: Kotlin ve Java etkileşimiyle ilgili YouTube'da "Coding in Flow" ya da "Code with Me" gibi kanallar üzerinde çeşitli Türkçe videolar bulabilirsiniz.
+## Video and Blog recommentation:
+- **Video**: You can find various videos in English about Kotlin and Java interoperability on YouTube channels like "Coding in Flow" or "Code with Me."
   
-- **Blog**: Resmi Kotlin blogu, Java ile Kotlin arasındaki etkileşim hakkında kapsamlı makalelere sahip. [kotlinlang.org](https://kotlinlang.org/docs/java-to-kotlin-interop.html) adresini ziyaret ederek daha fazla bilgi edinebilirsiniz.
+- **Blog**: The official Kotlin blog has comprehensive articles on Java-Kotlin interaction. Visit [kotlinlang.org](https://kotlinlang.org/docs/java-to-kotlin-interop.html) for more information
