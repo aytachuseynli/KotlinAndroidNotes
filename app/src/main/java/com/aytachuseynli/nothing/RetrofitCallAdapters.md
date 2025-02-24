@@ -128,40 +128,55 @@ flow.transform { user ->
 ```kotlin
 // Basic filtering
 flow.filter { user -> user.age > 18 }
+// Filters the flow to only emit users whose age is greater than 18.
 
 // Inverse filtering
 flow.filterNot { user -> user.isDeleted }
+// Filters the flow to emit users who are not marked as deleted.
 
 // Take/Drop operations
 flow.drop(2)
+// Skips the first 2 items in the flow and emits the rest.
+
 flow.take(5)
+// Emits only the first 5 items from the flow and ignores the rest.
 
 // Distinct values
 flow.distinctUntilChanged()
+// Emits only unique consecutive items, skipping duplicates.
+
 ```
 
 ### 3. Combining Operators
 ```kotlin
 // Zip operation
 users.zip(ages) { user, age -> "$user is $age years old" }
+// Combines the corresponding items from two flows into a single item, emitting pairs until one flow is exhausted.
 
 // Combine operation
 names.combine(scores) { name, score -> "$name: $score" }
+// Combines the latest values from both flows whenever one changes, emitting a new result with the current values of each flow.
 
 // Merge operation
 merge(flow1, flow2)
+// Merges multiple flows into a single flow, emitting items as they arrive without waiting for pairs.
+
 ```
 
 ### 4. Buffer and Rate Limiting
 ```kotlin
 // Buffering
 flow.buffer()
+// Collects emitted values in a buffer, allowing the flow to continue emitting without waiting for the collector to process each value.
 
 // Debounce
 searchFlow.debounce(300L)
+// Emits an item only if no new items are emitted within the specified time (300 milliseconds in this case). Useful for handling rapid user input, like search queries.
 
 // Sampling
 flow.sample(1000L)
+// Emits the latest value from the flow at the specified interval (every 1000 milliseconds in this case), ignoring intermediate values.
+
 ```
 
 ### 5. Error Handling
@@ -188,6 +203,10 @@ val stateFlow = flow.stateIn(
     started = SharingStarted.WhileSubscribed(5000),
     initialValue = emptyList()
 )
+// Converts a Flow into a StateFlow, which always holds the latest value.
+// - `scope`: Defines the coroutine scope where the flow runs (usually a ViewModel scope).
+// - `started`: Specifies when to start and stop the flow. `WhileSubscribed(5000)` keeps it active for 5 seconds after the last subscriber unsubscribes.
+// - `initialValue`: Sets the initial value of the StateFlow.
 
 // SharedFlow conversion
 val sharedFlow = flow.shareIn(
@@ -195,18 +214,30 @@ val sharedFlow = flow.shareIn(
     started = SharingStarted.Eagerly,
     replay = 1
 )
+// Converts a Flow into a SharedFlow, which can emit values to multiple collectors.
+// - `scope`: Defines the coroutine scope where the flow runs.
+// - `started`: `Eagerly` starts the flow immediately, even without subscribers.
+// - `replay`: Specifies how many previously emitted values to cache and replay to new collectors (1 in this case).
+
 ```
 
 ### 7. Flatting Operators
 ```kotlin
 // Sequential flat mapping
 flow.flatMapConcat { user -> getUserDetails(user.id) }
+// Transforms each emitted item into a new flow and collects the results sequentially, one after another.
+// It waits for the previous flow to complete before starting the next one.
 
 // Parallel flat mapping
 flow.flatMapMerge { user -> getUserPosts(user.id) }
+// Transforms each emitted item into a new flow and collects results concurrently, allowing multiple flows to run in parallel.
+// The results may arrive in any order based on completion time.
 
 // Latest value flat mapping
 searchFlow.flatMapLatest { query -> searchUsers(query) }
+// Cancels the previous flow and starts a new one every time a new item is emitted.
+// Only the latest search result is processed, making it ideal for real-time user input.
+
 ```
 
 ## Best Practices
