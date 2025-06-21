@@ -1,70 +1,66 @@
 package com.aytachuseynli.nothing.Functions
 
-
-
 fun main() {
-    selamVer() // Burada "Merhaba, nasılsın?" hemen yazılır.
-    selamVer() // Tekrar "Merhaba, nasılsın?" yazılır.
+    greet() // Prints "Hello, how are you?" immediately
+    greet() // Prints it again
 
-    oyunOyna {
-        println("Oyun oynanıyor!")
+    playGame {
+        println("Game is being played!")
     }
 
-    oyunYap {
-        println("Oyun oynanıyor!")
-        // return // Bunu yapamazsın, çünkü oyun bitmeden çıkış yok!
+    createGame {
+        println("Game is being played!")
+        // return // This is not allowed here due to crossinline restrictions.
     }
 }
 
-
-/*
-1. inline Nedir?
-Düşün ki, arkadaşlarınla bir oyun oynuyorsun ve her seferinde "ben buradayım" dediğinde,
-bunu kısaca "ben buradayım!" diye bağırarak yapıyorsun. Yani, her seferinde söyleniyor.
-İşte inline de bu gibi bir şey.
-Bir fonksiyonu her çağırdığında, onu sanki hemen orada yazıyormuşsun gibi yapar.
+/**
+ * 1. What is `inline`?
+ * 
+ * An inline function is expanded at the call site, meaning its code is directly inserted 
+ * wherever it's called. This can improve performance by avoiding function call overhead, 
+ * especially with lambda parameters.
  */
-
-inline fun selamVer() {
-    println("Merhaba, nasılsın?")
+inline fun greet() {
+    println("Hello, how are you?")
 }
 
-/*
-2. noinline Nedir?
-Şimdi, düşün ki arkadaşlarınla bir oyun oynarken, bazen "sadece beni dinle" demek istiyorsun.
-Ama bu sefer, sadece senin söylediklerini kaydetmek istiyorsun; başka kimseye söyleme!
-İşte noinline burada devreye giriyor.
-Yani, bir şey söylemek istiyorsun ama onu hemen orada yazmak istemiyorsun.
+/**
+ * 2. What is `noinline`?
+ * 
+ * Normally, lambdas passed to an inline function are also inlined. However, if you want 
+ * to pass a lambda as a value (e.g., to store it or pass it somewhere else), you can mark 
+ * it with `noinline`. This prevents it from being inlined.
  */
-
-inline fun oyunOyna(noinline eylem: () -> Unit) {
-    println("Oyun başlıyor!")
-    eylem() // Burada "sadece beni dinle" yazılır ama hemen yerleştirilmez.
-    println("Oyun bitiyor!")
+inline fun playGame(noinline action: () -> Unit) {
+    println("Game is starting!")
+    action() // Executed without being inlined
+    println("Game has ended!")
 }
 
-/*
-3. crossinline Nedir?
-Şimdi düşün ki, bir şey söylemek istiyorsun ama başka bir yerde oyun oynuyorsun ve oyun bitmeden çıkmak istemiyorsun.
-İşte crossinline bu durumda senin yanında!
-Oyun bittikten sonra "ben gidiyorum" demek istiyorsun ama bunu yapmana izin vermiyor.
+/**
+ * 3. What is `crossinline`?
+ * 
+ * Sometimes you need to pass a lambda into another execution context (like a thread or 
+ * Runnable), but you still want to inline the function. If the lambda includes non-local 
+ * control flow like `return`, it would cause issues. `crossinline` prevents non-local 
+ * returns in such cases, ensuring the lambda behaves safely when passed around.
  */
+inline fun createGame(crossinline action: () -> Unit) {
+    println("Game is starting!")
 
-inline fun oyunYap(crossinline eylem: () -> Unit) {
-    println("Oyun başlıyor!")
-
-    val yeniOyun = Runnable {
-        eylem() // Burada hemen çıkmak yok!
+    val newGame = Runnable {
+        action() // Cannot return from here due to crossinline
     }
 
-    Thread(yeniOyun).start() // Yeni bir yerde oyun başlatıyoruz.
+    Thread(newGame).start()
 
-    println("Oyun bitiyor!")
+    println("Game has ended!")
 }
 
-/*
-Özet
-inline: Her seferinde hemen orada yazılmış gibi çalışır. Hızlıdır.
-noinline: Hemen orada yazılmasını istemediğimiz durumlar için kullanılır.
-crossinline: Başka bir yere gidebilmek için oyunun bitmesini beklememizi sağlar.
+/**
+ * Summary:
+ * - `inline`: Replaces the function call with the function body to improve performance.
+ * - `noinline`: Prevents a lambda from being inlined, useful when passing lambdas around.
+ * - `crossinline`: Prevents non-local returns from a lambda passed to another context (e.g., thread).
  */
